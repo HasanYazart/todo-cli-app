@@ -1,2 +1,10 @@
-tasks.json
+# Python
 __pycache__/
+*.pyc
+
+# Local data
+tasks.json
+
+# Env
+.env
+venv/
