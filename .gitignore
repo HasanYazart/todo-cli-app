@@ -1,10 +1,14 @@
 # Python
 __pycache__/
 *.pyc
-
-# Local data
-tasks.json
-
-# Env
-.env
 venv/
+env/
+
+# Veritabanı ve Gizli Dosyalar (ÇOK ÖNEMLİ)
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Çevre Değişkenleri
+.env
