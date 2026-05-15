@@ -1,77 +1,477 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Giriş | To-Do</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-    --bg-dark: #0f172a;
-    --bg-card: #1e293b;
-    --bg-input: #0b1120;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-color: #334155;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --danger: #ef4444;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş | To Do App</title>
+    <meta name="description"
+        content="To Do App - Görevlerinizi akıllıca yönetin. Giriş yapın ve üretkenliğinizi artırın.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #06080f;
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --bg-card-border: rgba(99, 102, 241, 0.15);
+            --bg-input: rgba(6, 8, 15, 0.6);
+            --text-main: #f1f5f9;
+            --text-muted: #8892b0;
+            --accent-1: #6366f1;
+            --accent-2: #8b5cf6;
+            --accent-3: #a78bfa;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+            --danger: #f43f5e;
+            --success: #10b981;
+            --glow: 0 0 30px rgba(99, 102, 241, 0.15);
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; align-items: center; height: 100vh; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.auth-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; width: 100%; max-width: 360px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); text-align: center; }
-.auth-card h2 { margin-bottom: 24px; font-weight: 700; color: white; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-.input-group { position: relative; margin-bottom: 16px; text-align: left; }
-.input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-.input-group input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 16px 12px 40px; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: 0.2s; }
-.input-group input:focus { border-color: var(--primary); }
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-.btn-primary { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; background: var(--primary); color: white; margin-top: 8px; font-family: inherit; }
-.btn-primary:hover { background: var(--primary-hover); }
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(167, 139, 250, 0.05) 0%, transparent 50%);
+            animation: bgRotate 20s linear infinite;
+        }
 
-.link { margin-top: 20px; font-size: 14px; color: var(--text-muted); }
-.link a { color: var(--primary); text-decoration: none; font-weight: 500; }
-.link a:hover { text-decoration: underline; }
+        @keyframes bgRotate {
+            from {
+                transform: rotate(0deg);
+            }
 
-.flash { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
-.flash.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; }
-</style>
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(99, 102, 241, 0.15);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: rgba(139, 92, 246, 0.12);
+            bottom: 20%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(167, 139, 250, 0.1);
+            top: 60%;
+            left: 50%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.05);
+            }
+        }
+
+        /* Grid lines */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Auth Card */
+        .auth-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            box-shadow: var(--glow), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            border-radius: 20px 20px 0 0;
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-1);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+            }
+        }
+
+        .logo h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        /* Flash messages */
+        .flash {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: shake 0.4s ease;
+        }
+
+        .flash.error {
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            color: var(--danger);
+        }
+
+        .flash.success {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Input groups */
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            z-index: 2;
+        }
+
+        .input-field input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            color: var(--text-main);
+            padding: 14px 18px 14px 46px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .input-field input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-field input:focus+i,
+        .input-field input:focus~i {
+            color: var(--accent-1);
+        }
+
+        .input-field:has(input:focus) i {
+            color: var(--accent-1);
+        }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            background: var(--gradient-1);
+            color: white;
+            margin-top: 8px;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+        }
+
+        /* Link */
+        .auth-link {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .auth-link a {
+            color: var(--accent-3);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .auth-link a:hover {
+            color: var(--accent-1);
+            text-decoration: underline;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            gap: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .divider span {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="auth-card">
-    <h2><i class="fa-solid fa-rocket" style="color: var(--primary);"></i> To-Do Giriş</h2>
+    <!-- Background -->
+    <div class="bg-gradient"></div>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-list-check"></i></div>
+                <h1>To Do App</h1>
+                <p>Görevlerini akıllıca yönet</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
             {% for msg in messages %}
-                <div class="flash {% if 'Başarılı' in msg %}success{% endif %}">
-                    <i class="fa-solid fa-circle-exclamation"></i> {{ msg }}
-                </div>
+            <div class="flash {% if 'Başarılı' in msg %}success{% else %}error{% endif %}">
+                <i
+                    class="fa-solid {% if 'Başarılı' in msg %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                {{ msg }}
+            </div>
             {% endfor %}
-        {% endif %}
-    {% endwith %}
+            {% endif %}
+            {% endwith %}
 
-    <form method="post">
-        <div class="input-group">
-            <i class="fa-regular fa-user"></i>
-            <input name="u" placeholder="Kullanıcı adı" required>
-        </div>
-        <div class="input-group">
-            <i class="fa-solid fa-lock"></i>
-            <input name="p" type="password" placeholder="Şifre" required>
-        </div>
-        <button class="btn-primary">Giriş Yap</button>
-    </form>
+            <!-- Form -->
+            <form method="post" id="login-form">
+                <div class="input-group">
+                    <label for="login-username">Kullanıcı Adı</label>
+                    <div class="input-field">
+                        <input name="u" id="login-username" placeholder="Kullanıcı adınızı girin" required
+                            autocomplete="username">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Şifre</label>
+                    <div class="input-field">
+                        <input name="p" id="login-password" type="password" placeholder="Şifrenizi girin" required
+                            autocomplete="current-password">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="login-submit">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap
+                </button>
+            </form>
 
-    <div class="link">
-        Hesabın yok mu? <a href="/register">Kayıt Ol</a>
+            <div class="divider"><span>veya</span></div>
+
+            <div class="auth-link">
+                Hesabın yok mu? <a href="/register">Kayıt Ol</a>
+            </div>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

@@ -3,160 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard | To-Do</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Dashboard | To Do App</title>
+<meta name="description" content="To Do App Dashboard - Görevlerinizi yönetin ve üretkenliğinizi artırın.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-/* Renkler */
 :root {
-    --bg-dark: #0f172a;
-    --bg-card: #1e293b;
-    --bg-input: #0b1120;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-color: #334155;
-    --primary: #3b82f6;
+    --bg-primary: #06080f;
+    --bg-card: rgba(15, 23, 42, 0.65);
+    --bg-card-solid: #0f172a;
+    --bg-card-border: rgba(99, 102, 241, 0.12);
+    --bg-input: rgba(6, 8, 15, 0.6);
+    --text-main: #f1f5f9;
+    --text-muted: #8892b0;
+    --accent-1: #6366f1;
+    --accent-2: #8b5cf6;
+    --accent-3: #a78bfa;
+    --gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+    --danger: #f43f5e;
     --success: #10b981;
-    --danger: #ef4444;
+    --warning: #f59e0b;
+    --glow: 0 0 30px rgba(99, 102, 241, 0.1);
 }
-
-/* Genel */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
-.container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
 
-/* Başlık */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
-.header h2 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-.logout-btn { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-.logout-btn:hover { color: var(--danger); }
+/* BG */
+.bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(99,102,241,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.02) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+.bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: 0; pointer-events: none; animation: orbFloat 10s ease-in-out infinite; }
+.bg-orb-1 { width: 400px; height: 400px; background: rgba(99,102,241,0.15); top: -10%; left: -5%; }
+.bg-orb-2 { width: 300px; height: 300px; background: rgba(139,92,246,0.1); bottom: 10%; right: -5%; animation-delay: -4s; }
+@keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-/* Kart */
-.card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 24px; transition: opacity 0.3s ease, transform 0.3s ease; }
+/* Layout */
+.app { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
 
-/* Formlar */
-.add-form { display: flex; gap: 12px; flex-wrap: wrap; }
-.add-form input { flex: 1; min-width: 150px; }
-input { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 16px; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
-input:focus { border-color: var(--primary); }
+/* Header */
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--bg-card-border); }
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-logo { width: 42px; height: 42px; background: var(--gradient-1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.header h1 { font-size: 22px; font-weight: 800; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.logout-btn { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--bg-card-border); transition: all 0.2s; display: flex; align-items: center; gap: 8px; background: transparent; }
+.logout-btn:hover { border-color: var(--danger); color: var(--danger); background: rgba(244,63,94,0.05); }
 
-/* Butonlar */
-button, .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-primary { background: var(--primary); color: white; }
-.btn-success { background: var(--success); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-.btn-dark { background: var(--bg-dark); color: white; border: 1px solid var(--border-color); }
+/* Card */
+.card { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--bg-card-border); border-radius: 16px; padding: 24px; margin-bottom: 20px; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(99,102,241,0.2), transparent); }
+.card:hover { border-color: rgba(99,102,241,0.25); box-shadow: var(--glow); }
 
-/* Görevler */
-.task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-.task-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-.badges { display: flex; gap: 10px; font-size: 12px; flex-wrap: wrap; }
-.badge { background: var(--bg-dark); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border-color); color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+/* Add Form */
+.add-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.add-form input { flex: 1; min-width: 140px; }
+input, select { background: var(--bg-input); border: 1px solid rgba(99,102,241,0.1); color: var(--text-main); padding: 12px 16px; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; transition: all 0.2s; }
+input:focus { border-color: var(--accent-1); box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
+input::placeholder { color: var(--text-muted); }
 
-/* İkonlar */
-.task-actions { display: flex; gap: 8px; }
-.icon-btn { background: var(--bg-dark); color: var(--text-muted); border: 1px solid var(--border-color); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-.icon-btn:hover { color: white; }
-.icon-btn.check:hover { background: var(--success); border-color: var(--success); }
-.icon-btn.trash:hover { background: var(--danger); border-color: var(--danger); }
-.icon-btn.edit:hover { background: var(--primary); border-color: var(--primary); }
+/* Buttons */
+button, .btn { padding: 12px 18px; border: none; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 7px; transition: all 0.2s; }
+.btn-add { background: var(--gradient-1); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.25); }
+.btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.35); }
+.btn-primary { background: var(--accent-1); color: #fff; }
+.btn-primary:hover { background: var(--accent-2); }
+.btn-dark { background: var(--bg-card-solid); color: var(--text-muted); border: 1px solid var(--bg-card-border); }
+.btn-dark:hover { border-color: var(--accent-1); color: var(--text-main); }
+.btn-danger { background: rgba(244,63,94,0.1); color: var(--danger); border: 1px solid rgba(244,63,94,0.15); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
 
-/* İlerleme */
-.progress-container { margin-bottom: 20px; }
-.progress-header { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
-.progress-bar { height: 8px; background: var(--bg-dark); border-radius: 10px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--primary); border-radius: 10px; transition: 0.4s ease; }
+/* Filters */
+.filters { display: flex; gap: 8px; margin-bottom: 24px; }
+.filter-btn { background: var(--bg-card-solid); border: 1px solid var(--bg-card-border); color: var(--text-muted); padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: all 0.2s; }
+.filter-btn.active, .filter-btn:hover { background: var(--accent-1); color: #fff; border-color: var(--accent-1); box-shadow: 0 2px 10px rgba(99,102,241,0.25); }
 
-/* Altgörevler */
-.subtasks { background: var(--bg-dark); padding: 16px; border-radius: 8px; }
-.subtask-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.subtask-item:last-child { border-bottom: none; }
-.subtask-btn { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 0; }
-.subtask-text { font-size: 14px; flex: 1; transition: 0.3s; }
-.subtask-text.done { text-decoration: line-through; color: var(--text-muted); }
-.add-subtask-form { display: flex; margin-top: 16px; }
-.add-subtask-form input { flex: 1; border-radius: 8px 0 0 8px; border-right: none; }
-.add-subtask-form button { border-radius: 0 8px 8px 0; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); }
+/* Task Card */
+.task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+.task-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+.task-card.is-done .task-title { text-decoration: line-through; color: var(--text-muted); }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { background: rgba(99,102,241,0.08); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(99,102,241,0.12); color: var(--text-muted); font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.badge.overdue { border-color: rgba(244,63,94,0.2); color: var(--danger); background: rgba(244,63,94,0.06); }
+.badge.today { border-color: rgba(245,158,11,0.2); color: var(--warning); background: rgba(245,158,11,0.06); }
 
-/* Filtreler */
-.filters { display: flex; gap: 10px; margin-bottom: 20px; }
-.filter-btn { background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 14px; }
-.filter-btn.active, .filter-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+/* Action buttons */
+.task-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-btn { background: var(--bg-card-solid); color: var(--text-muted); border: 1px solid var(--bg-card-border); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 13px; display: flex; align-items: center; justify-content: center; padding: 0; }
+.icon-btn.check:hover, .icon-btn.check.active { background: var(--success); border-color: var(--success); color: #fff; }
+.icon-btn.trash:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
+.icon-btn.edit:hover { background: var(--accent-1); border-color: var(--accent-1); color: #fff; }
+
+/* Edit Form */
+.edit-form { display: none; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--bg-card-border); }
+
+/* Progress */
+.progress-section { margin-bottom: 16px; }
+.progress-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+.progress-bar { height: 6px; background: rgba(99,102,241,0.08); border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; background: var(--gradient-1); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.progress-fill.complete { background: var(--success); }
+
+/* Subtasks */
+.subtasks { background: rgba(6,8,15,0.4); padding: 14px; border-radius: 12px; border: 1px solid rgba(99,102,241,0.06); }
+.subtask-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.subtask-item:last-of-type { border-bottom: none; }
+.subtask-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 0; transition: all 0.2s; display: flex; }
+.subtask-btn:hover { transform: scale(1.15); }
+.subtask-text { font-size: 13px; flex: 1; transition: all 0.2s; font-weight: 400; }
+.subtask-text.done { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
+.add-subtask-form { display: flex; margin-top: 12px; }
+.add-subtask-form input { flex: 1; border-radius: 10px 0 0 10px; border-right: none; font-size: 13px; padding: 10px 14px; }
+.add-subtask-form button { border-radius: 0 10px 10px 0; background: var(--bg-card-solid); border: 1px solid var(--bg-card-border); color: var(--text-muted); padding: 10px 14px; }
+.add-subtask-form button:hover { color: var(--accent-1); }
 
 /* Pomodoro */
 .pomodoro-card { text-align: center; }
-.timer { font-size: 64px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 10px 0; color: var(--primary); text-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-.pomodoro-controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;}
+.pomodoro-card h3 { font-size: 15px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.timer { font-size: 56px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 16px 0; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -1px; }
+.pomodoro-presets { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+.pomodoro-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+.empty-state i { font-size: 40px; margin-bottom: 16px; opacity: 0.3; }
+.empty-state p { font-size: 15px; }
+
+/* Animations */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.card { animation: fadeInUp 0.4s ease both; }
+.card:nth-child(2) { animation-delay: 0.05s; }
+.card:nth-child(3) { animation-delay: 0.1s; }
+.card:nth-child(4) { animation-delay: 0.15s; }
+.card:nth-child(5) { animation-delay: 0.2s; }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .app { padding: 20px 14px 40px; }
+    .header h1 { font-size: 18px; }
+    .add-form input { min-width: 100%; }
+    .timer { font-size: 42px; }
+    .task-header { flex-direction: column; }
+    .task-actions { align-self: flex-end; }
+}
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
 
-    <!-- Üstbar -->
+<div class="app">
+
+    <!-- Header -->
     <div class="header">
-        <h2><i class="fa-solid fa-rocket" style="color: var(--primary);"></i> Dashboard</h2>
-        <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+        <div class="header-left">
+            <div class="header-logo"><i class="fa-solid fa-list-check"></i></div>
+            <h1>To Do App</h1>
+        </div>
+        <a href="/logout" class="logout-btn" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
     </div>
 
-    <!-- Ekle -->
+    <!-- Add Task -->
     <div class="card">
-        <form action="/add" method="post" class="add-form">
+        <form action="/add" method="post" class="add-form" id="add-task-form">
             <input name="task" placeholder="Ne yapılması gerekiyor?" required>
             <input name="category" placeholder="Kategori">
             <input type="date" name="deadline">
-            <button class="btn-success"><i class="fa-solid fa-plus"></i> Ekle</button>
+            <button class="btn-add" type="submit"><i class="fa-solid fa-plus"></i> Ekle</button>
         </form>
     </div>
 
-    <!-- Filtreler -->
-    <div class="filters">
-        <button onclick="filterTasks('all', this)" class="filter-btn active">Tümü</button>
-        <button onclick="filterTasks('todo', this)" class="filter-btn">Kalanlar</button>
-        <button onclick="filterTasks('done', this)" class="filter-btn">Bitenler</button>
+    <!-- Filters & Search -->
+    <div class="filters-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+        <div class="filters" style="margin-bottom: 0;">
+            <button onclick="filterTasks('all', this)" class="filter-btn active" id="filter-all">Tümü</button>
+            <button onclick="filterTasks('todo', this)" class="filter-btn" id="filter-todo">Yapılacak</button>
+            <button onclick="filterTasks('done', this)" class="filter-btn" id="filter-done">Tamamlanan</button>
+        </div>
+        <div class="search-box" style="position: relative;">
+            <i class="fa-solid fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px;"></i>
+            <input type="text" id="search-input" placeholder="Görev ara..." onkeyup="searchTasks()" style="padding-left: 36px; border-radius: 20px; padding-top: 8px; padding-bottom: 8px; width: 200px;">
+        </div>
     </div>
 
-    <!-- Listele -->
+    <!-- Tasks -->
+    {% if not tasks %}
+    <div class="card">
+        <div class="empty-state">
+            <i class="fa-regular fa-clipboard"></i>
+            <p>Henüz görev yok. Yukarıdan yeni bir görev ekleyin!</p>
+        </div>
+    </div>
+    {% endif %}
+
     {% for x in tasks %}
-    <div class="card task-card" id="task-card-{{x.task.id}}" data-done="{{x.task.done}}">
-        
+    <div class="card task-card {% if x.task.done == 1 %}is-done{% endif %}" id="task-card-{{x.task.id}}" data-done="{{x.task.done}}">
+
         <div class="task-header">
             <div>
                 <div class="task-title">{{x.task.task}}</div>
                 <div class="badges">
                     {% if x.task.category %}<span class="badge"><i class="fa-solid fa-tag"></i> {{x.task.category}}</span>{% endif %}
-                    {% if x.task.deadline %}<span class="badge"><i class="fa-regular fa-calendar"></i> {{x.task.deadline}} ({{x.rem}})</span>{% endif %}
+                    {% if x.task.deadline %}<span class="badge {% if x.rem == 'Geçti' %}overdue{% elif x.rem == 'Bugün' %}today{% endif %}"><i class="fa-regular fa-calendar"></i> {{x.task.deadline}} · {{x.rem}}</span>{% endif %}
                 </div>
             </div>
-            
             <div class="task-actions">
-                <button onclick="toggleMainTask({{x.task.id}})" class="icon-btn check" id="btn-main-{{x.task.id}}" style="{% if x.task.done==1 %}background: var(--success); border-color: var(--success); color: white;{% endif %}"><i class="fa-solid fa-check"></i></button>
-                <button onclick="document.getElementById('edit-form-{{x.task.id}}').style.display = document.getElementById('edit-form-{{x.task.id}}').style.display === 'none' ? 'flex' : 'none';" class="icon-btn edit"><i class="fa-solid fa-pen"></i></button>
-                <button onclick="deleteTask({{x.task.id}})" class="icon-btn trash"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="toggleMainTask({{x.task.id}})" class="icon-btn check {% if x.task.done==1 %}active{% endif %}" id="btn-main-{{x.task.id}}" title="Tamamla"><i class="fa-solid fa-check"></i></button>
+                <button onclick="toggleEdit({{x.task.id}})" class="icon-btn edit" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+                <button onclick="deleteTask({{x.task.id}})" class="icon-btn trash" title="Sil"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
 
-        <!-- Düzenle -->
-        <form action="/edit/{{x.task.id}}" method="post" class="add-form" id="edit-form-{{x.task.id}}" style="display:none; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--border-color);">
+        <!-- Edit -->
+        <form action="/edit/{{x.task.id}}" method="post" class="add-form edit-form" id="edit-form-{{x.task.id}}">
             <input name="task" value="{{x.task.task}}" required>
             <input name="category" value="{{x.task.category}}">
             <input type="date" name="deadline" value="{{x.task.deadline}}">
             <button class="btn-primary"><i class="fa-solid fa-save"></i> Kaydet</button>
         </form>
 
-        <!-- İlerleme -->
-        <div class="progress-container">
+        <!-- Progress -->
+        <div class="progress-section">
             <div class="progress-header">
                 <span>İlerleme</span>
                 <span id="progress-text-{{x.task.id}}">%{{x.p}}</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill-{{x.task.id}}" style="width:{{x.p}}%; {% if x.p == 100 %}background-color: var(--success);{% endif %}"></div>
+                <div class="progress-fill {% if x.p == 100 %}complete{% endif %}" id="progress-fill-{{x.task.id}}" style="width:{{x.p}}%"></div>
             </div>
         </div>
 
-        <!-- Altgörevler -->
+        <!-- Subtasks -->
         <div class="subtasks">
             {% for s in x.subs %}
             <div class="subtask-item">
@@ -167,116 +242,139 @@ button, .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight
                 <span class="subtask-text {% if s.done==1 %}done{% endif %}" id="sub-text-{{s.id}}">{{s.text}}</span>
             </div>
             {% endfor %}
-
             <form action="/add_sub/{{x.task.id}}" method="post" class="add-subtask-form">
                 <input name="text" placeholder="Yeni alt görev..." required>
                 <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
             </form>
         </div>
-
     </div>
     {% endfor %}
 
     <!-- Pomodoro -->
     <div class="card pomodoro-card">
-        <h3><i class="fa-solid fa-stopwatch" style="color: var(--text-muted);"></i> Odaklanma Zamanı</h3>
-        <div style="margin-top:10px;">
-            <button onclick="setTime(25)" class="btn btn-dark">25dk</button>
-            <button onclick="setTime(15)" class="btn btn-dark">15dk</button>
-            <button onclick="setTime(5)" class="btn btn-dark">5dk</button>
+        <h3><i class="fa-solid fa-stopwatch"></i> Odaklanma Zamanlayıcı</h3>
+        <div class="pomodoro-presets">
+            <button onclick="setTime(25)" class="btn-dark btn">25dk</button>
+            <button onclick="setTime(15)" class="btn-dark btn">15dk</button>
+            <button onclick="setTime(5)" class="btn-dark btn">5dk</button>
         </div>
         <div id="timer" class="timer">25:00</div>
         <div class="pomodoro-controls">
-            <button onclick="start()" class="btn-primary"><i class="fa-solid fa-play"></i> Başlat</button>
-            <button onclick="pause()" class="btn btn-dark"><i class="fa-solid fa-pause"></i> Durdur</button>
-            <button onclick="reset()" class="btn-danger"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
+            <button onclick="start()" class="btn-add btn" id="pomo-start"><i class="fa-solid fa-play"></i> Başlat</button>
+            <button onclick="pause()" class="btn-dark btn" id="pomo-pause"><i class="fa-solid fa-pause"></i> Durdur</button>
+            <button onclick="reset()" class="btn-danger btn" id="pomo-reset"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
         </div>
     </div>
-
 </div>
 
-<!-- Zil -->
-<audio id="sound">
-<source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
-</audio>
+<!-- Sound -->
+<audio id="sound"><source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
 
 <script>
 // Pomodoro
 let t = 1500, i;
-function upd() { 
-    let m = Math.floor(t/60), s = t%60; 
-    document.getElementById("timer").innerText = m + ":" + ("0"+s).slice(-2); 
+function upd() {
+    let m = Math.floor(t/60), s = t%60;
+    document.getElementById("timer").innerText = m + ":" + ("0"+s).slice(-2);
 }
 function setTime(m) { t = m * 60; upd(); pause(); }
-function start() { 
-    if(i) return; 
-    i = setInterval(() => { 
-        t--; upd(); 
-        if(t <= 0) { clearInterval(i); document.getElementById("sound").play(); alert("Süre Doldu!"); reset(); } 
-    }, 1000); 
+function start() {
+    if(i) return;
+    i = setInterval(() => {
+        t--; upd();
+        if(t <= 0) { clearInterval(i); document.getElementById("sound").play(); alert("Süre Doldu!"); reset(); }
+    }, 1000);
 }
 function pause() { clearInterval(i); i = null; }
 function reset() { pause(); t = 1500; upd(); }
 upd();
 
-// AJAX-Sil
+// Edit toggle
+function toggleEdit(id) {
+    const f = document.getElementById('edit-form-' + id);
+    f.style.display = f.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// Delete
 async function deleteTask(taskId) {
     if(!confirm("Silinsin mi?")) return;
     const res = await fetch(`/api/delete/${taskId}`, { method: 'POST' });
     if((await res.json()).status === "success") {
         const card = document.getElementById(`task-card-${taskId}`);
-        card.style.transform = "scale(0.9)";
+        card.style.transform = "scale(0.95) translateY(-10px)";
         card.style.opacity = "0";
-        setTimeout(() => card.remove(), 300);
+        setTimeout(() => card.remove(), 350);
     }
 }
 
-// AJAX-AnaDurum
+// Toggle main task
 async function toggleMainTask(taskId) {
     const res = await fetch(`/api/done/${taskId}`, { method: 'POST' });
     const data = await res.json();
     if(data.status === "success") {
         const btn = document.getElementById(`btn-main-${taskId}`);
         const card = document.getElementById(`task-card-${taskId}`);
-        card.setAttribute("data-done", data.is_done ? "1" : "0"); // Filtre için
-        
+        card.setAttribute("data-done", data.is_done ? "1" : "0");
         if(data.is_done) {
-            btn.style.background = "var(--success)"; btn.style.borderColor = "var(--success)"; btn.style.color = "white";
+            btn.classList.add('active');
+            card.classList.add('is-done');
         } else {
-            btn.style.background = "var(--bg-dark)"; btn.style.borderColor = "var(--border-color)"; btn.style.color = "var(--text-muted)";
+            btn.classList.remove('active');
+            card.classList.remove('is-done');
         }
     }
 }
 
-// AJAX-Altdurum
+// Toggle subtask
 async function toggleSubtask(subId, taskId) {
     const res = await fetch(`/api/toggle/${subId}`, { method: 'POST' });
     const data = await res.json();
     if(data.status === "success") {
-        const btn = document.getElementById(`sub-btn-${subId}`), text = document.getElementById(`sub-text-${subId}`);
-        const pFill = document.getElementById(`progress-fill-${taskId}`), pText = document.getElementById(`progress-text-${taskId}`);
-        
-        if(data.is_done) { btn.innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--success);"></i>'; text.classList.add("done"); }
-        else { btn.innerHTML = '<i class="fa-regular fa-circle"></i>'; text.classList.remove("done"); }
-
-        pFill.style.width = `${data.percent}%`; pText.innerText = `%${data.percent}`;
-        pFill.style.backgroundColor = data.percent === 100 ? "var(--success)" : "var(--primary)";
+        const btn = document.getElementById(`sub-btn-${subId}`);
+        const text = document.getElementById(`sub-text-${subId}`);
+        const pFill = document.getElementById(`progress-fill-${taskId}`);
+        const pText = document.getElementById(`progress-text-${taskId}`);
+        if(data.is_done) {
+            btn.innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--success);"></i>';
+            text.classList.add("done");
+        } else {
+            btn.innerHTML = '<i class="fa-regular fa-circle"></i>';
+            text.classList.remove("done");
+        }
+        pFill.style.width = `${data.percent}%`;
+        pText.innerText = `%${data.percent}`;
+        if(data.percent === 100) pFill.classList.add('complete');
+        else pFill.classList.remove('complete');
     }
 }
 
-// Filtre
+// Search
+function searchTasks() {
+    const input = document.getElementById('search-input').value.toLowerCase();
+    const activeFilter = document.querySelector('.filter-btn.active').id.replace('filter-', '');
+    
+    document.querySelectorAll('.task-card').forEach(card => {
+        const title = card.querySelector('.task-title').innerText.toLowerCase();
+        let isDone = card.getAttribute('data-done') === '1';
+        let showByFilter = true;
+        
+        if(activeFilter === 'todo' && isDone) showByFilter = false;
+        if(activeFilter === 'done' && !isDone) showByFilter = false;
+        
+        if (title.includes(input) && showByFilter) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Filter
 function filterTasks(type, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
-    document.querySelectorAll('.task-card').forEach(card => {
-        let isDone = card.getAttribute('data-done') === '1';
-        if(type === 'all') card.style.display = 'block';
-        else if(type === 'todo') card.style.display = isDone ? 'none' : 'block';
-        else if(type === 'done') card.style.display = isDone ? 'block' : 'none';
-    });
+    searchTasks();
 }
 </script>
-
 </body>
 </html>
