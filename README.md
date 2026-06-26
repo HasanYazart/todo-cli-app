@@ -1,49 +1,59 @@
-# 🚀 Gelişmiş To-Do & Pomodoro Uygulaması
+# Todo & Pomodoro App
 
-Modern web teknolojileri kullanılarak geliştirilmiş, asenkron (AJAX) yapıya sahip, alt görev destekli ve Pomodoro entegreli tam teşekküllü bir görev yönetim sistemidir. 
+Modern, şık tasarımlı (Glassmorphism) ve gelişmiş özelliklerle donatılmış bir "Görev Yöneticisi ve Pomodoro" uygulamasıdır. Başlangıçta basit bir CLI uygulaması olarak doğan bu proje, artık hem güçlü bir web uygulaması hem de arka planda CLI ile senkronize çalışabilen sağlam bir Flask mimarisine sahiptir.
 
-Başlangıçta basit bir CLI uygulaması olarak tasarlanan bu proje, sonrasında **Flask, SQLAlchemy ORM ve Fetch API** kullanılarak modern bir Full-Stack web uygulamasına dönüştürülmüştür.
+## 🚀 Özellikler
 
-## ✨ Özellikler
+- **Gelişmiş Arayüz & Glassmorphism:** CSS değişkenleri ve modern UI prensipleri ile inşa edilmiş çarpıcı bir tasarım.
+- **Görev Yönetimi:**
+  - Ana görevler ve alt görevler (Subtasks).
+  - İlerleme çubukları (Progress bars).
+  - Görevlere "Düşük, Orta, Yüksek" öncelik atama ve rozetlerle görüntüleme.
+  - Sürükle-bırak (Drag & Drop) ile görev sıralamasını değiştirme özelliği (SortableJS).
+- **Pomodoro Zamanlayıcı:**
+  - Görevlerinize odaklanmanız için entegre sayaç.
+  - Özel ayarlarla (15, 25, 30, 45, 60 dk) varsayılan süre belirleme.
+  - Süre dolduğunda çalan Alarm Sesini kişiselleştirme veya kendi dosyanızı (.mp3, .ogg) yükleme özelliği.
+- **Kullanıcı Profili ve Ayarlar:**
+  - Tek tıkla **Aydınlık (Light)** ve **Karanlık (Dark)** tema arasında geçiş.
+  - Güvenli şifre değiştirme (Werkzeug hashing).
+  - Tüm görev ve verilerinizi yedeklemek için JSON olarak **Dışa Aktarma (Export)** özelliği.
+  - GDPR uyumlu: Tüm verilerle birlikte Hesabı Kalıcı Olarak Silme seçeneği.
+  - Modern, şık ve animasyonlu (SweetAlert2) bildirim mesajları.
+- **CLI Entegrasyonu:** `main.py` dosyası üzerinden de aynı SQLite veritabanına ulaşıp komut satırından işlem yapabilirsiniz.
 
-- **🔒 Kullanıcı Yetkilendirme:** Güvenli şifreleme (hash) ile kayıt olma ve giriş yapma sistemi. Her kullanıcının verisi sadece kendine özeldir.
-- **⚡ Asenkron İşlemler (AJAX):** Görev tamamlama, silme ve alt görev işaretleme işlemleri sayfa yenilenmeden (Fetch API ile) anında gerçekleşir.
-- **📊 Dinamik İlerleme Çubuğu:** Eklenen alt görevlerin tamamlanma durumuna göre ana görevin ilerleme yüzdesi (`%`) anlık olarak hesaplanır ve renk değiştirir.
-- **⏱️ Pomodoro Sayacı:** Odaklanmayı artırmak için tasarlanmış, 25, 15 ve 5 dakikalık periyotlara ayarlanabilen, süre bitiminde sesli uyarı veren entegre zamanlayıcı.
-- **📅 Tarih ve Filtreleme:** Görevlerin bitiş tarihine kaç gün kaldığını otomatik hesaplar. Kalan veya tamamlanan görevleri tek tuşla filtreleme imkanı sunar.
-- **✏️ Tam CRUD Desteği:** Görev ekleme, okuma, düzenleme (Update) ve silme (Delete) işlemleri.
+## 🛠️ Teknolojiler
 
-## 🛠️ Kullanılan Teknolojiler
+- **Backend:** Python, Flask, Flask-SQLAlchemy (Blueprints Mimarisi)
+- **Veritabanı:** SQLite
+- **Frontend:** HTML5, CSS3 (Vanilla), JavaScript, SortableJS, SweetAlert2, FontAwesome
 
-**Backend:**
-- Python
-- Flask
-- Flask-SQLAlchemy (ORM Mimarisi)
-- SQLite
-- Werkzeug (Şifre Güvenliği)
+## 📦 Kurulum ve Çalıştırma
 
-**Frontend:**
-- HTML5 / CSS3 (Flexbox & CSS Variables)
-- JavaScript (Fetch API)
-- Jinja2 Template Engine
-- FontAwesome Icons & Google Fonts (Inter)
-
-## ⚙️ Kurulum ve Çalıştırma
-
-Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyebilirsiniz:
-
-1. Projeyi klonlayın:
+1. Repoyu klonlayın:
    ```bash
-   git clone [https://github.com/HasanYazart/todo-cli-app.git](https://github.com/HasanYazart/todo-cli-app.git)
+   git clone https://github.com/HasanYazart/todo-cli-app.git
    cd todo-cli-app
    ```
-2. Gerekli kütüphaneleri yükleyin:
-```bash
-pip install Flask Flask-SQLAlchemy Werkzeug
-```
+
+2. Gerekli kütüphaneleri kurun (Eğer sanal ortam kullanıyorsanız önce onu aktif edin):
+   ```bash
+   pip install flask flask-sqlalchemy werkzeug
+   ```
+
 3. Uygulamayı başlatın:
+   ```bash
+   python app.py
+   ```
+
+4. Tarayıcınızdan `http://127.0.0.1:5000` adresine giderek kullanmaya başlayabilirsiniz.
+
+## 💻 CLI Kullanımı
+
+`main.py` üzerinden komut satırından da uygulamanızı yönetebilirsiniz (Varsayılan kullanıcı ID=1 olarak baz alınır):
 ```bash
-python app.py
+python main.py add "Yeni görev adı"
+python main.py list
+python main.py list done
+python main.py done <GOREV_ID>
 ```
-4. Tarayıcınızda açın:
-http://127.0.0.1:5000 adresine giderek uygulamayı kullanmaya başlayabilirsiniz. Veritabanı (database.db) ilk çalıştırmada otomatik olarak oluşturulacaktır.
