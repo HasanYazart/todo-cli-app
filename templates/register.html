@@ -438,10 +438,11 @@
             {% endwith %}
 
             <form method="post" id="register-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                 <div class="input-group">
                     <label for="reg-username">Kullanıcı Adı</label>
                     <div class="input-field">
-                        <input name="u" id="reg-username" placeholder="Bir kullanıcı adı seçin" required
+                        <input name="u" id="reg-username" placeholder="Bir kullanıcı adı seçin" required minlength="3" maxlength="50"
                             autocomplete="username">
                         <i class="fa-regular fa-user"></i>
                     </div>
@@ -450,7 +451,7 @@
                     <label for="reg-password">Şifre</label>
                     <div class="input-field">
                         <input name="p" id="reg-password" type="password" placeholder="Güçlü bir şifre belirleyin"
-                            required autocomplete="new-password">
+                            required minlength="8" autocomplete="new-password">
                         <i class="fa-solid fa-lock"></i>
                     </div>
                     <div class="strength-bar">

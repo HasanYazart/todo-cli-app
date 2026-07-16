@@ -26,15 +26,27 @@
         </div>
         <div style="display:flex; gap:10px;">
             <a href="/profile" class="logout-btn" style="color: var(--text-main); border-color: rgba(99,102,241,0.2);"><i class="fa-solid fa-user"></i> Profilim</a>
-            <a href="/logout" class="logout-btn" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
+            <form action="/logout" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="logout-btn" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</button>
+            </form>
         </div>
     </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="card" style="color: var(--danger); padding: 14px 18px;">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <!-- Add Task -->
     <div class="card">
         <form action="/add" method="post" class="add-form" id="add-task-form">
-            <input name="task" placeholder="Ne yapılması gerekiyor?" required>
-            <input name="category" placeholder="Kategori">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <input name="task" placeholder="Ne yapılması gerekiyor?" required maxlength="255">
+            <input name="category" placeholder="Kategori" maxlength="100">
             <input type="date" name="deadline">
             <select name="priority">
                 <option value="" disabled selected hidden>Görev Önceliği</option>
@@ -93,8 +105,9 @@
 
         <!-- Edit -->
         <form action="/edit/{{x.task.id}}" method="post" class="add-form edit-form" id="edit-form-{{x.task.id}}">
-            <input name="task" value="{{x.task.task}}" required>
-            <input name="category" value="{{x.task.category}}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <input name="task" value="{{x.task.task}}" required maxlength="255">
+            <input name="category" value="{{x.task.category}}" maxlength="100">
             <input type="date" name="deadline" value="{{x.task.deadline}}">
             <select name="priority">
                 <option value="" disabled hidden {% if not x.task.priority %}selected{% endif %}>Görev Önceliği</option>
@@ -128,7 +141,8 @@
             </div>
             {% endfor %}
             <form action="/add_sub/{{x.task.id}}" method="post" class="add-subtask-form">
-                <input name="text" placeholder="Yeni alt görev..." required>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <input name="text" placeholder="Yeni alt görev..." required maxlength="255">
                 <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
             </form>
         </div>
@@ -140,9 +154,11 @@
     <div class="card pomodoro-card">
         <h3><i class="fa-solid fa-stopwatch"></i> Odaklanma Zamanlayıcı</h3>
         <div class="pomodoro-presets">
-            <button onclick="setTime(25)" class="btn-dark btn">25dk</button>
             <button onclick="setTime(15)" class="btn-dark btn">15dk</button>
-            <button onclick="setTime(5)" class="btn-dark btn">5dk</button>
+            <button onclick="setTime(25)" class="btn-dark btn">25dk</button>
+            <button onclick="setTime(30)" class="btn-dark btn">30dk</button>
+            <button onclick="setTime(45)" class="btn-dark btn">45dk</button>
+            <button onclick="setTime(60)" class="btn-dark btn">60dk</button>
         </div>
         <div id="timer" class="timer">{{ user.pomodoro_time }}:00</div>
         <div class="pomodoro-controls">
@@ -158,6 +174,7 @@
 
 <script>
     const DEFAULT_POMO_TIME = {{ user.pomodoro_time }};
+    const CSRF_TOKEN = {{ csrf_token() | tojson }};
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>

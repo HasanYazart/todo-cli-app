@@ -9,6 +9,7 @@ env/
 *.sqlite
 *.sqlite3
 instance/
+static/uploads/
 
 # Çevre Değişkenleri
 .env

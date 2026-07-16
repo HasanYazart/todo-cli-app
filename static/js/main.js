@@ -51,7 +51,10 @@ async function deleteTask(taskId) {
     });
     if(!result.isConfirmed) return;
 
-    const res = await fetch(`/api/delete/${taskId}`, { method: 'POST' });
+    const res = await fetch(`/api/delete/${taskId}`, {
+        method: 'POST',
+        headers: {'X-CSRF-Token': CSRF_TOKEN}
+    });
     if((await res.json()).status === "success") {
         const card = document.getElementById(`task-card-${taskId}`);
         card.style.transform = "scale(0.95) translateY(-10px)";
@@ -62,7 +65,10 @@ async function deleteTask(taskId) {
 
 // Toggle main task
 async function toggleMainTask(taskId) {
-    const res = await fetch(`/api/done/${taskId}`, { method: 'POST' });
+    const res = await fetch(`/api/done/${taskId}`, {
+        method: 'POST',
+        headers: {'X-CSRF-Token': CSRF_TOKEN}
+    });
     const data = await res.json();
     if(data.status === "success") {
         const btn = document.getElementById(`btn-main-${taskId}`);
@@ -80,7 +86,10 @@ async function toggleMainTask(taskId) {
 
 // Toggle subtask
 async function toggleSubtask(subId, taskId) {
-    const res = await fetch(`/api/toggle/${subId}`, { method: 'POST' });
+    const res = await fetch(`/api/toggle/${subId}`, {
+        method: 'POST',
+        headers: {'X-CSRF-Token': CSRF_TOKEN}
+    });
     const data = await res.json();
     if(data.status === "success") {
         const btn = document.getElementById(`sub-btn-${subId}`);
@@ -142,10 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
             animation: 150,
             handle: '.handle',
             onEnd: async function () {
-                const ids = Array.from(el.querySelectorAll('.task-card')).map(card => card.id.replace('task-card-', ''));
+                const ids = Array.from(el.querySelectorAll('.task-card'))
+                    .map(card => Number(card.id.replace('task-card-', '')))
+                    .filter(Number.isInteger);
                 await fetch('/api/reorder', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': CSRF_TOKEN
+                    },
                     body: JSON.stringify({order: ids})
                 });
             }

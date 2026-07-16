@@ -40,6 +40,7 @@
     <div class="card profile-card">
         <div class="section-title"><i class="fa-solid fa-gear"></i> Uygulama Ayarları</div>
         <form id="settings-form" onsubmit="saveSettings(event)" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label>Tema</label>
                 <select name="theme">
@@ -88,11 +89,12 @@
 
         <div class="section-title"><i class="fa-solid fa-lock"></i> Şifre Değiştir</div>
         <form id="password-form" onsubmit="updatePassword(event)">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <input type="password" name="old_p" placeholder="Mevcut şifreniz" required>
             </div>
             <div class="form-group">
-                <input type="password" name="new_p" placeholder="Yeni şifreniz" required>
+                <input type="password" name="new_p" placeholder="Yeni şifreniz" required minlength="8">
             </div>
             <button class="btn-primary btn-block" type="submit"><i class="fa-solid fa-key"></i> Şifreyi Güncelle</button>
         </form>
@@ -108,6 +110,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script>
+const CSRF_TOKEN = {{ csrf_token() | tojson }};
+
 function checkCustomSound() {
     const val = document.getElementById('pomodoro_sound').value;
     document.getElementById('custom_sound_group').style.display = (val === 'custom') ? 'flex' : 'none';
@@ -123,7 +127,7 @@ function testSound() {
             player.play();
         } else {
             {% if not user.pomodoro_sound.startswith('http') %}
-            player.src = "{{ user.pomodoro_sound }}";
+            player.src = {{ user.pomodoro_sound | tojson }};
             player.play();
             {% else %}
             Swal.fire({icon: 'info', title:'Dosya Seçilmedi', text:'Lütfen önce bir ses dosyası seçin.', background: 'var(--bg-card)', color: 'var(--text-main)'});
@@ -149,6 +153,7 @@ async function saveSettings(e) {
     
     const res = await fetch('/profile/settings', {
         method: 'POST',
+        headers: {'X-CSRF-Token': CSRF_TOKEN},
         body: formData
     });
     const data = await res.json();
@@ -172,6 +177,7 @@ async function updatePassword(e) {
     
     const res = await fetch('/profile/password', {
         method: 'POST',
+        headers: {'X-CSRF-Token': CSRF_TOKEN},
         body: formData
     });
     const data = await res.json();
@@ -205,7 +211,10 @@ async function deleteAccount() {
     });
     
     if (result.isConfirmed) {
-        const res = await fetch('/profile/delete', { method: 'POST' });
+        const res = await fetch('/profile/delete', {
+            method: 'POST',
+            headers: {'X-CSRF-Token': CSRF_TOKEN}
+        });
         if((await res.json()).status === "success") {
             window.location = '/login';
         }
