@@ -443,10 +443,11 @@
 
             <!-- Form -->
             <form method="post" id="login-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                 <div class="input-group">
                     <label for="login-username">Kullanıcı Adı</label>
                     <div class="input-field">
-                        <input name="u" id="login-username" placeholder="Kullanıcı adınızı girin" required
+                        <input name="u" id="login-username" placeholder="Kullanıcı adınızı girin" required maxlength="50"
                             autocomplete="username">
                         <i class="fa-regular fa-user"></i>
                     </div>
